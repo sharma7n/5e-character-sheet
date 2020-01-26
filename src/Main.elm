@@ -5,6 +5,9 @@ import Browser
 import Html
 
 
+import Element
+
+
 main : Program () Model msg 
 main =
     Browser.element
@@ -16,19 +19,46 @@ main =
 
 
 type alias Model =
-    {}
+    { steps : List Step
+    }
+
+
+type alias Step =
+    { label : String
+    }
 
 
 init : () -> ( Model, Cmd msg )
-init flags = ( {}, Cmd.none )
+init flags = 
+    let
+        initModel =
+            { steps = initSteps
+            }
+        
+        initSteps =
+            [ { label = "Choose a Race" }
+            , { label = "Choose a Background" }
+            , { label = "Choose a Class" }
+            ]
+    in
+    ( initModel, Cmd.none )
 
 
 view : Model -> Html.Html msg
-view model = Html.text "Hello, world!"
+view model =
+    viewElement model
+    |> Element.layout []
+
+
+viewElement : Model -> Element.Element msg
+viewElement model =
+    Element.column
+        []
+        (model.steps |> List.map (\step -> Element.text step.label))
 
 
 update : msg -> Model -> ( Model, Cmd msg )
-update msg model = ( {}, Cmd.none )
+update msg model = ( model, Cmd.none )
 
 
 subscriptions : model -> Sub msg
