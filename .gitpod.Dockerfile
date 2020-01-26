@@ -1,5 +1,5 @@
 FROM node:latest
 
-USER gitpod
+USER root
 
 RUN npm install -g elm
