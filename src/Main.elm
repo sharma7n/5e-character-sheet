@@ -38,7 +38,11 @@ init flags =
         initSteps =
             [ { label = "Choose a Race" }
             , { label = "Choose a Background" }
+            , { label = "Choose an Alignment" }
             , { label = "Choose a Class" }
+            , { label = "Generate Ability Scores" }
+            , { label = "Choose Equipment" }
+            , { label = "Prepare Spells" }
             ]
     in
     ( initModel, Cmd.none )
