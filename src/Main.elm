@@ -6,6 +6,11 @@ import Html
 
 
 import Element
+import Element.Background
+import Element.Font
+
+
+import Palette
 
 
 main : Program () Model msg 
@@ -20,7 +25,13 @@ main =
 
 type alias Model =
     { steps : List Step
+    , state : State
     }
+
+
+type State
+    = ViewingSteps
+    | DoingStep Step
 
 
 type alias Step =
@@ -33,6 +44,7 @@ init flags =
     let
         initModel =
             { steps = initSteps
+            , state = ViewingSteps
             }
         
         initSteps =
@@ -41,8 +53,6 @@ init flags =
             , { label = "Choose an Alignment" }
             , { label = "Choose a Class" }
             , { label = "Generate Ability Scores" }
-            , { label = "Choose Equipment" }
-            , { label = "Prepare Spells" }
             ]
     in
     ( initModel, Cmd.none )
@@ -51,14 +61,35 @@ init flags =
 view : Model -> Html.Html msg
 view model =
     viewElement model
-    |> Element.layout []
+    |> Element.layout
+        [ Element.explain Debug.todo
+        , Element.Font.family
+            [ Element.Font.typeface "Verdana"
+            , Element.Font.sansSerif
+            ]
+        , Element.Font.color Palette.elementFontColor
+        , Element.Background.color Palette.siteBackgroundColor
+        ]
 
 
 viewElement : Model -> Element.Element msg
 viewElement model =
     Element.column
-        []
-        (model.steps |> List.map (\step -> Element.text step.label))
+        [ Element.centerX
+        , Element.centerY
+        , Element.spacing 10
+        ]
+        (List.map viewStep model.steps)
+
+
+viewStep : Step -> Element.Element msg
+viewStep step =
+    Element.el
+        [ Element.Background.color Palette.elementBackgroundColor
+        , Element.padding 5
+        , Element.width Element.fill
+        ]
+        (Element.text step.label)
 
 
 update : msg -> Model -> ( Model, Cmd msg )
