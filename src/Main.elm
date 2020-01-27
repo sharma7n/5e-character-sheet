@@ -15,7 +15,7 @@ import Palette
 import Ui
 
 
-main : Program () Model Msg 
+main : Program () (Model Msg) Msg 
 main =
     Browser.element
         { init = init
@@ -25,27 +25,28 @@ main =
         }
 
 
-type alias Model =
-    { steps : List Step
-    , state : State
+type alias Model msg =
+    { steps : List (Step msg)
+    , state : State msg
     }
 
 
-type State
+type State msg
     = ViewingSteps
-    | DoingStep Step
+    | DoingStep (Step msg)
 
 
-type alias Step =
+type alias Step msg =
     { label : String
+    , request : Cmd msg
     }
 
 
 type Msg
-    = WorkOnStep Step
+    = WorkOnStep (Step Msg)
 
 
-init : () -> ( Model, Cmd Msg )
+init : () -> ( Model Msg, Cmd Msg )
 init flags = 
     let
         initModel =
@@ -54,19 +55,21 @@ init flags =
             }
         
         initSteps =
-            [ { label = "Choose a Race" }
+            [   { label = "Choose a Race"
+                , request = Cmd.none
+                }
             ]
     in
     ( initModel, Cmd.none )
 
 
-view : Model -> Html.Html Msg
+view : Model Msg -> Html.Html Msg
 view model =
     viewElement model
     |> Element.layout Ui.globalLayout
 
 
-viewElement : Model -> Element.Element Msg
+viewElement : Model Msg -> Element.Element Msg
 viewElement model =
     case model.state of
         ViewingSteps ->
@@ -76,14 +79,14 @@ viewElement model =
             viewDoingStep step model
 
 
-viewAllSteps : Model -> Element.Element Msg
+viewAllSteps : Model Msg -> Element.Element Msg
 viewAllSteps model =
     Element.column
         Ui.panel
         (List.map viewStep model.steps)
 
 
-viewStep : Step -> Element.Element Msg
+viewStep : Step Msg -> Element.Element Msg
 viewStep step =
     Element.el
         (List.concat
@@ -94,21 +97,21 @@ viewStep step =
         (Element.text step.label)
 
 
-viewDoingStep : Step -> Model -> Element.Element Msg
+viewDoingStep : Step Msg -> Model Msg -> Element.Element Msg
 viewDoingStep step model =
     Element.el
         Ui.panel
         (Element.text <| "Working on: " ++ step.label)
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model Msg -> ( Model Msg, Cmd Msg )
 update msg model =
     case msg of
         WorkOnStep step ->
             updateWorkOnStep step model
 
 
-updateWorkOnStep : Step -> Model -> ( Model, Cmd Msg )
+updateWorkOnStep : Step Msg -> Model Msg -> ( Model Msg, Cmd Msg )
 updateWorkOnStep step model =
     let
         newModel =
@@ -116,7 +119,7 @@ updateWorkOnStep step model =
             , state = DoingStep step
             }
     in
-    ( newModel, Cmd.none )
+    ( newModel, step.request )
 
 
 subscriptions : model -> Sub msg
