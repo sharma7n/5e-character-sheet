@@ -12,6 +12,7 @@ import Element.Font
 
 
 import Palette
+import Ui
 
 
 main : Program () Model Msg 
@@ -62,15 +63,7 @@ init flags =
 view : Model -> Html.Html Msg
 view model =
     viewElement model
-    |> Element.layout
-        [ Element.explain Debug.todo
-        , Element.Font.family
-            [ Element.Font.typeface "Verdana"
-            , Element.Font.sansSerif
-            ]
-        , Element.Font.color Palette.elementFontColor
-        , Element.Background.color Palette.siteBackgroundColor
-        ]
+    |> Element.layout Ui.globalLayout
 
 
 viewElement : Model -> Element.Element Msg
@@ -86,39 +79,26 @@ viewElement model =
 viewAllSteps : Model -> Element.Element Msg
 viewAllSteps model =
     Element.column
-        [ Element.centerX
-        , Element.centerY
-        , Element.spacing 10
-        ]
+        Ui.panel
         (List.map viewStep model.steps)
 
 
 viewStep : Step -> Element.Element Msg
 viewStep step =
     Element.el
-        [ Element.Background.color Palette.elementBackgroundColor
-        , Element.padding 5
-        , Element.width Element.fill
-        , Element.Events.onClick (WorkOnStep step)
-        ]
+        (List.concat
+            [ Ui.panel
+            ,   [ Element.Events.onClick (WorkOnStep step)
+                ]
+            ])
         (Element.text step.label)
 
 
 viewDoingStep : Step -> Model -> Element.Element Msg
 viewDoingStep step model =
     Element.el
-        [ Element.centerX
-        , Element.centerY
-        , Element.spacing 10
-        ]
-        (viewDoingThisStep step)
-
-
-viewDoingThisStep : Step -> Element.Element Msg
-viewDoingThisStep step =
-    Element.el
-        []
-        (Element.text step.label)
+        Ui.panel
+        (Element.text <| "Working on: " ++ step.label)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
