@@ -7,13 +7,14 @@ import Html
 
 import Element
 import Element.Background
+import Element.Events
 import Element.Font
 
 
 import Palette
 
 
-main : Program () Model msg 
+main : Program () Model Msg 
 main =
     Browser.element
         { init = init
@@ -39,7 +40,11 @@ type alias Step =
     }
 
 
-init : () -> ( Model, Cmd msg )
+type Msg
+    = WorkOnStep Step
+
+
+init : () -> ( Model, Cmd Msg )
 init flags = 
     let
         initModel =
@@ -49,16 +54,12 @@ init flags =
         
         initSteps =
             [ { label = "Choose a Race" }
-            , { label = "Choose a Background" }
-            , { label = "Choose an Alignment" }
-            , { label = "Choose a Class" }
-            , { label = "Generate Ability Scores" }
             ]
     in
     ( initModel, Cmd.none )
 
 
-view : Model -> Html.Html msg
+view : Model -> Html.Html Msg
 view model =
     viewElement model
     |> Element.layout
@@ -72,8 +73,18 @@ view model =
         ]
 
 
-viewElement : Model -> Element.Element msg
+viewElement : Model -> Element.Element Msg
 viewElement model =
+    case model.state of
+        ViewingSteps ->
+            viewAllSteps model
+        
+        DoingStep step ->
+            viewDoingStep step model
+
+
+viewAllSteps : Model -> Element.Element Msg
+viewAllSteps model =
     Element.column
         [ Element.centerX
         , Element.centerY
@@ -82,18 +93,50 @@ viewElement model =
         (List.map viewStep model.steps)
 
 
-viewStep : Step -> Element.Element msg
+viewStep : Step -> Element.Element Msg
 viewStep step =
     Element.el
         [ Element.Background.color Palette.elementBackgroundColor
         , Element.padding 5
         , Element.width Element.fill
+        , Element.Events.onClick (WorkOnStep step)
         ]
         (Element.text step.label)
 
 
-update : msg -> Model -> ( Model, Cmd msg )
-update msg model = ( model, Cmd.none )
+viewDoingStep : Step -> Model -> Element.Element Msg
+viewDoingStep step model =
+    Element.el
+        [ Element.centerX
+        , Element.centerY
+        , Element.spacing 10
+        ]
+        (viewDoingThisStep step)
+
+
+viewDoingThisStep : Step -> Element.Element Msg
+viewDoingThisStep step =
+    Element.el
+        []
+        (Element.text step.label)
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        WorkOnStep step ->
+            updateWorkOnStep step model
+
+
+updateWorkOnStep : Step -> Model -> ( Model, Cmd Msg )
+updateWorkOnStep step model =
+    let
+        newModel =
+            { steps = model.steps
+            , state = DoingStep step
+            }
+    in
+    ( newModel, Cmd.none )
 
 
 subscriptions : model -> Sub msg
