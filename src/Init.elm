@@ -10,7 +10,7 @@ init flags =
     let
         initModel =
             { steps = initSteps
-            , state = ViewingSteps
+            , state = Model.ViewingSteps
             }
         
         initSteps =

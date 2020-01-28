@@ -1,6 +1,9 @@
 module View exposing (..)
 
 
+import Html
+
+
 import Element
 import Element.Events
 
@@ -19,10 +22,10 @@ view model =
 viewElement : Model.Model Msg.Msg -> Element.Element Msg.Msg
 viewElement model =
     case model.state of
-        ViewingSteps ->
+        Model.ViewingSteps ->
             viewAllSteps model
         
-        DoingStep step ->
+        Model.DoingStep step ->
             viewDoingStep step model
 
 
@@ -33,18 +36,18 @@ viewAllSteps model =
         (List.map viewStep model.steps)
 
 
-viewStep : Step Msg.Msg -> Element.Element Msg.Msg
+viewStep : Model.Step Msg.Msg -> Element.Element Msg.Msg
 viewStep step =
     Element.el
         (List.concat
             [ Ui.panel
-            ,   [ Element.Events.onClick (WorkOnStep step)
+            ,   [ Element.Events.onClick (Msg.WorkOnStep step)
                 ]
             ])
         (Element.text step.label)
 
 
-viewDoingStep : Step Msg.Msg -> Model.Model Msg.Msg -> Element.Element Msg.Msg
+viewDoingStep : Model.Step Msg.Msg -> Model.Model Msg.Msg -> Element.Element Msg.Msg
 viewDoingStep step model =
     Element.el
         Ui.panel
