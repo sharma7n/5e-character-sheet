@@ -1,6 +1,10 @@
 module Race exposing (..)
 
 
+import Http
+import Json.Decode as D
+
+
 import AbilityScore
 import Language
 import Size
@@ -16,3 +20,14 @@ type alias Race =
     , languages : List Language.Language
     , traits : List Trait.Trait
     }
+
+
+raceDecoder : D.Decoder Race
+raceDecoder =
+    D.map6 Race
+        D.string
+        (D.succeed [])
+        (D.succeed Size.Medium)
+        (D.succeed (Speed.Speed 6))
+        (D.list Language.languageDecoder)
+        (D.succeed [])
