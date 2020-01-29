@@ -1,23 +1,47 @@
 module Update exposing (..)
 
 
+import Http
+
+
 import Model
 import Msg
+import Race
 
 
-update : Msg.Msg -> Model.Model Msg.Msg -> ( Model.Model Msg.Msg, Cmd Msg.Msg )
+update : Msg.Msg -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
 update msg model =
     case msg of
         Msg.WorkOnStep step ->
             updateWorkOnStep step model
+        
+        Msg.RaceMsg raceMsg ->
+            updateOnRaceMsg raceMsg model
 
 
-updateWorkOnStep : Model.Step Msg.Msg -> Model.Model Msg.Msg -> ( Model.Model Msg.Msg, Cmd Msg.Msg )
+updateWorkOnStep : Model.Step -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
 updateWorkOnStep step model =
     let
-        newModel =
-            { steps = model.steps
-            , state = Model.DoingStep step
-            }
+        newModel = { model | state = Model.DoingStep step }
     in
-    ( newModel, step.request )
+    ( newModel, Cmd.none )
+
+
+updateOnRaceMsg : Race.Msg -> Model.Model-> ( Model.Model, Cmd Msg.Msg )
+updateOnRaceMsg raceMsg model =
+    case raceMsg of
+        Race.GotRaces result ->
+            updateGotRaces result model
+
+
+updateGotRaces : Result Http.Error (List Race.Race) -> Model.Model-> ( Model.Model, Cmd Msg.Msg )
+updateGotRaces result model =
+    case result of
+        Ok races ->
+            let
+                newModel = { model | races = races }
+            in
+            ( newModel, Cmd.none )
+        
+        Err error ->
+            ( model, Cmd.none )

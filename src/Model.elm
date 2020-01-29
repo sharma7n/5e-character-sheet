@@ -1,18 +1,38 @@
 module Model exposing (..)
 
 
-type alias Model msg =
-    { steps : List (Step msg)
-    , state : State msg
+import Race
+
+
+type alias Model =
+    { steps : List Step
+    , state : State
+    , races : List Race.Race
     }
 
 
-type State msg
+type State
     = ViewingSteps
-    | DoingStep (Step msg)
+    | DoingStep Step
 
 
-type alias Step msg =
+type alias Step =
     { label : String
-    , request : Cmd msg
     }
+
+
+init : Model
+init = 
+    let
+        initModel =
+            { steps = initSteps
+            , state = ViewingSteps
+            , races = []
+            }
+        
+        initSteps =
+            [   { label = "Choose a Race"
+                }
+            ]
+    in
+    initModel

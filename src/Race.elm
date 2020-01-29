@@ -22,6 +22,11 @@ type alias Race =
     }
 
 
+
+type Msg
+    = GotRaces (Result Http.Error (List Race))
+
+
 raceDecoder : D.Decoder Race
 raceDecoder =
     D.map6 Race
@@ -31,3 +36,11 @@ raceDecoder =
         (D.succeed (Speed.Speed 6))
         (D.list Language.languageDecoder)
         (D.succeed [])
+
+
+getRaces : Cmd Msg
+getRaces =
+    Http.get
+        { url = "https://sharma7n-5e-character-sheet.builtwithdark.com/races"
+        , expect = Http.expectJson GotRaces (D.list raceDecoder) 
+        }

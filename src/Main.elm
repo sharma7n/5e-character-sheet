@@ -12,7 +12,7 @@ import Update
 import View
 
 
-main : Program () (Model.Model Msg.Msg) Msg.Msg 
+main : Program () Model.Model Msg.Msg 
 main =
     Browser.element
         { init = Init.init
