@@ -30,12 +30,12 @@ type Msg
 raceDecoder : D.Decoder Race
 raceDecoder =
     D.map6 Race
-        D.string
-        (D.succeed [])
-        (D.succeed Size.Medium)
-        (D.succeed (Speed.Speed 6))
-        (D.list Language.languageDecoder)
-        (D.succeed [])
+        (D.field "name" D.string)
+        (D.field "abilityScoreIncreases" (D.succeed []))
+        (D.field "size" (D.succeed Size.Medium))
+        (D.field "speed" (D.succeed (Speed.Speed 6)))
+        (D.field "languages" (D.list Language.languageDecoder))
+        (D.field "traits" (D.succeed []))
 
 
 getRaces : Cmd Msg

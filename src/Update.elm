@@ -23,8 +23,9 @@ updateWorkOnStep : Model.Step -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
 updateWorkOnStep step model =
     let
         newModel = { model | state = Model.DoingStep step }
+        cmd = Cmd.map Msg.RaceMsg Race.getRaces
     in
-    ( newModel, Cmd.none )
+    ( newModel, cmd )
 
 
 updateOnRaceMsg : Race.Msg -> Model.Model-> ( Model.Model, Cmd Msg.Msg )

@@ -1,6 +1,9 @@
 module Model exposing (..)
 
 
+import Http
+
+
 import Race
 
 
@@ -8,6 +11,7 @@ type alias Model =
     { steps : List Step
     , state : State
     , races : List Race.Race
+    , error : Maybe Http.Error
     }
 
 
@@ -28,6 +32,7 @@ init =
             { steps = initSteps
             , state = ViewingSteps
             , races = []
+            , error = Nothing
             }
         
         initSteps =

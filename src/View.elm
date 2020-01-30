@@ -22,6 +22,16 @@ view model =
 
 viewElement : Model.Model -> Element.Element Msg.Msg
 viewElement model =
+    case model.error of
+        Nothing ->
+            viewModel model
+        
+        Just httpError ->
+            Element.text <| Debug.toString httpError
+
+
+viewModel : Model.Model -> Element.Element Msg.Msg
+viewModel model =
     case model.state of
         Model.ViewingSteps ->
             viewAllSteps model
