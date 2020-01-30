@@ -12,6 +12,7 @@ type alias Model =
     , state : State
     , races : List Race.Race
     , error : Maybe Http.Error
+    , chosenRace : Maybe Race.Race
     }
 
 
@@ -33,6 +34,7 @@ init =
             , state = ViewingSteps
             , races = []
             , error = Nothing
+            , chosenRace = Nothing
             }
         
         initSteps =

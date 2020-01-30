@@ -32,6 +32,22 @@ viewElement model =
 
 viewModel : Model.Model -> Element.Element Msg.Msg
 viewModel model =
+    Element.column
+        Ui.panel
+        [ viewChosenOptions model
+        , viewModelState model
+        ]
+
+
+viewChosenOptions : Model.Model -> Element.Element Msg.Msg
+viewChosenOptions model =
+    Element.text <|
+    Maybe.withDefault "No Race Selected" <|
+    Maybe.map .name <|
+    model.chosenRace
+
+viewModelState : Model.Model -> Element.Element Msg.Msg
+viewModelState model =
     case model.state of
         Model.ViewingSteps ->
             viewAllSteps model
@@ -65,6 +81,8 @@ viewDoingStep step model =
         (List.map viewRace model.races)
 
 
-viewRace : Race.Race -> Element.Element msg
+viewRace : Race.Race -> Element.Element Msg.Msg
 viewRace race =
-    Element.text race.name
+    Element.el
+        (Ui.panel ++ [Element.Events.onClick (Msg.ChoseRace race)])
+        (Element.text race.name)

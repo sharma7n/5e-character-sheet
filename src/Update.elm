@@ -17,6 +17,9 @@ update msg model =
         
         Msg.RaceMsg raceMsg ->
             updateOnRaceMsg raceMsg model
+        
+        Msg.ChoseRace race ->
+            updateChoseRace race model
 
 
 updateWorkOnStep : Model.Step -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
@@ -46,3 +49,11 @@ updateGotRaces result model =
         
         Err error ->
             ( model, Cmd.none )
+
+
+updateChoseRace : Race.Race -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
+updateChoseRace race model =
+    let
+        newModel = { model | chosenRace = Just race }
+    in
+    ( newModel, Cmd.none )
