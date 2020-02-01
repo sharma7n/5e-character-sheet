@@ -1,18 +1,21 @@
 module Model exposing (..)
 
 
-type alias Model msg =
-    { steps : List (Step msg)
-    , state : State msg
-    }
+import Http
 
 
-type State msg
-    = ViewingSteps
-    | DoingStep (Step msg)
+import Block
 
 
-type alias Step msg =
-    { label : String
-    , request : Cmd msg
-    }
+type Model
+    = LoadingBlocks
+    | ViewingBlocksResult Block.FetchResult
+
+
+init : Model
+init = 
+    let
+        initModel =
+            LoadingBlocks
+    in
+    initModel

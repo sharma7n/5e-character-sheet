@@ -1,23 +1,25 @@
 module Update exposing (..)
 
 
+import Http
+
+
+import Block
 import Model
 import Msg
 
 
-update : Msg.Msg -> Model.Model Msg.Msg -> ( Model.Model Msg.Msg, Cmd Msg.Msg )
+update : Msg.Msg -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
 update msg model =
     case msg of
-        Msg.WorkOnStep step ->
-            updateWorkOnStep step model
+        Msg.ElmGotBlocksResponse result ->
+            updateElmGotBlocksResponse result model
 
 
-updateWorkOnStep : Model.Step Msg.Msg -> Model.Model Msg.Msg -> ( Model.Model Msg.Msg, Cmd Msg.Msg )
-updateWorkOnStep step model =
+updateElmGotBlocksResponse : Block.FetchResult -> Model.Model -> ( Model.Model, Cmd Msg.Msg )
+updateElmGotBlocksResponse result model =
     let
         newModel =
-            { steps = model.steps
-            , state = Model.DoingStep step
-            }
+            Model.ViewingBlocksResult result
     in
-    ( newModel, step.request )
+    ( newModel, Cmd.none )

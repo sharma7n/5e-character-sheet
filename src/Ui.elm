@@ -11,13 +11,13 @@ import Palette
 
 globalLayout : List (Element.Attribute msg)
 globalLayout =
-    [ Element.explain Debug.todo
-    , Element.Font.family
+    [ Element.Font.family
         [ Element.Font.typeface "Verdana"
         , Element.Font.sansSerif
         ]
     , Element.Font.color Palette.elementFontColor
     , Element.Background.color Palette.siteBackgroundColor
+    -- , Element.explain Debug.todo
     ]
 
 
