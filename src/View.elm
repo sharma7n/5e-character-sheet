@@ -86,4 +86,7 @@ viewBlock block =
     Element.column
         Ui.panel
         [ Element.text block.name
+        , Element.text <| "HP " ++ ( String.fromInt block.hitPoints )
+        , Element.text <| "AC " ++ ( String.fromInt block.armorClass )
+        , Element.text <| "Speed " ++ (String.fromInt block.speed )
         ]
