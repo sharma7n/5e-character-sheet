@@ -1,10 +1,11 @@
 module Init exposing (..)
 
 
+import Action
 import Model
 import Msg
 
 
 init : () -> ( Model.Model, Cmd Msg.Msg )
 init flags = 
-    ( Model.init, Cmd.none )
+    ( Model.init, Action.getBlocks )

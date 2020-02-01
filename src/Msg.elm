@@ -1,8 +1,12 @@
 module Msg exposing (..)
 
 
+import Http
+
+
+import Block
 import Model
 
 
 type Msg
-    = NoOp
+    = ElmGotBlocksResponse Block.FetchResult
